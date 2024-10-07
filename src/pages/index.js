@@ -3,6 +3,7 @@ import Head from "next/head";
 import Image from "next/image";
 import localFont from "next/font/local";
 import styles from "@/styles/Home.module.css";
+import StoryItem from "@/components/StoryItem";
 
 export default function Home() {
   const [query, setQuery] = useState("");
@@ -82,49 +83,48 @@ export default function Home() {
       <div className={`${styles.page}`}>
         <main className={styles.main}>
           <h1>Hacker Stories</h1>
-          <div>
+          <div className="auto-suggest-container">
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search title"
+              className="auto-suggest-input"
             />
             {isDropdownVisible && suggestions.length > 0 && (
-              <ul>
+              <ul className="suggestions-dropdown">
                 {suggestions.map((suggestion, index) => (
-                  <li key={index} onClick={() => handleSelectStory(suggestion)}>
-                    <h4>{highlightMatch(suggestion.title, debouncedQuery)}</h4>
-                    <p>
-                      <span>{suggestion.points} points </span> |{" "}
-                      <span>{suggestion.author} </span> |{" "}
-                      <span>{suggestion.num_comments} comments </span>
-                    </p>
-                  </li>
+                  <StoryItem
+                    key={index + 1}
+                    title={highlightMatch(suggestion.title, debouncedQuery)}
+                    points={suggestion.points}
+                    author={suggestion.author}
+                    comments={suggestion.num_comments}
+                    index={index}
+                    suggestionHandler={() => handleSelectStory(suggestion)}
+                    suggestionItem
+                  />
+                ))}
+              </ul>
+            )}
+            <h3 className="selected-stories-title">Saved Stories</h3>
+            {selectedStories.length > 0 && (
+              <ul>
+                {selectedStories.map((story, index) => (
+                  <StoryItem
+                    key={story.title}
+                    title={story.title}
+                    points={story.points}
+                    author={story.author}
+                    comments={story.num_comments}
+                    deleteHandler={() => handleDeleteStory(index)}
+                    index={index}
+                    showDeleteButton
+                  />
                 ))}
               </ul>
             )}
           </div>
-
-          {selectedStories.length > 0 && (
-            <div>
-              <h3>Saved Stories</h3>
-              <ul>
-                {selectedStories.map((story, index) => (
-                  <li key={index}>
-                    <h4>{story.title}</h4>
-                    <p>
-                      <span> {story.points} Points</span> |{" "}
-                      <span>{story.author} </span> |{" "}
-                      <span> {story.num_comments} comments</span>
-                    </p>
-                    <button onClick={() => handleDeleteStory(index)}>
-                      Delete
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
         </main>
         <footer className={styles.footer}>
           Created By Eleftheria Drakoulakou

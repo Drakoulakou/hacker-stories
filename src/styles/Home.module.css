@@ -1,0 +1,18 @@
+.page {
+  display: grid;
+  grid-template-rows: 20px 1fr 20px;
+  min-height: 100svh;
+  font-family: system-ui;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  grid-row-start: 2;
+}
+
+.footer {
+  grid-row-start: 3;
+  text-align: center;
+  padding-bottom: 25px;
+}
