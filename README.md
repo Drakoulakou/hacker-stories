@@ -48,4 +48,4 @@ To run this project locally, follow these steps:
    Open [http://localhost:3000](http://localhost:3000) to view the application in your browser.
 
 5. Deployed on Vercel
-   URL:[https://hacker-stories-wheat.vercel.app/](https://hacker-stories-wheat.vercel.app/)
+   URL:[https://hacker-stories-mauve.vercel.app/](https://hacker-stories-mauve.vercel.app/)
