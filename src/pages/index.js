@@ -9,10 +9,20 @@ export default function Home() {
   const [suggestions, setSuggestions] = useState([]);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [selectedStories, setSelectedStories] = useState([]);
+  const [debouncedQuery, setDebouncedQuery] = useState("");
 
   useEffect(() => {
-    if (query.length >= 3) {
-      fetch(`https://hn.algolia.com/api/v1/search?query=${query}`)
+    const handler = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 500);
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [query]);
+
+  useEffect(() => {
+    if (debouncedQuery.length >= 3) {
+      fetch(`https://hn.algolia.com/api/v1/search?query=${debouncedQuery}`)
         .then((response) => response.json())
         .then((data) => {
           const results = data.hits.map((item) => ({
@@ -28,7 +38,7 @@ export default function Home() {
       setSuggestions([]);
       setIsDropdownVisible(false);
     }
-  }, [query]);
+  }, [debouncedQuery]);
 
   const handleSelectStory = (story) => {
     setSelectedStories((prevStories) => [...prevStories, story]);
@@ -38,6 +48,27 @@ export default function Home() {
 
   const handleDeleteStory = (index) => {
     setSelectedStories(() => selectedStories.filter((item, i) => i !== index));
+  };
+
+  const highlightMatch = (title, query) => {
+    if (!query) return title;
+    if (!title) return "";
+    const regex = new RegExp(`(${query})`, "gi");
+    const parts = title?.split(regex);
+
+    return (
+      <>
+        {parts.map((part, index) =>
+          part.toLowerCase() === query.toLowerCase() ? (
+            <span key={index} style={{ color: "orange" }}>
+              {part}
+            </span>
+          ) : (
+            part
+          )
+        )}
+      </>
+    );
   };
 
   return (
@@ -62,7 +93,7 @@ export default function Home() {
               <ul>
                 {suggestions.map((suggestion, index) => (
                   <li key={index} onClick={() => handleSelectStory(suggestion)}>
-                    <h4>{suggestion.title}</h4>
+                    <h4>{highlightMatch(suggestion.title, debouncedQuery)}</h4>
                     <p>
                       <span>{suggestion.points} points </span> |{" "}
                       <span>{suggestion.author} </span> |{" "}
