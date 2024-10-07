@@ -36,6 +36,10 @@ export default function Home() {
     setIsDropdownVisible(false);
   };
 
+  const handleDeleteStory = (index) => {
+    setSelectedStories(() => selectedStories.filter((item, i) => i !== index));
+  };
+
   return (
     <>
       <Head>
@@ -82,6 +86,9 @@ export default function Home() {
                       <span>{story.author} </span> |{" "}
                       <span> {story.num_comments} comments</span>
                     </p>
+                    <button onClick={() => handleDeleteStory(index)}>
+                      Delete
+                    </button>
                   </li>
                 ))}
               </ul>
