@@ -8,6 +8,7 @@ export default function Home() {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const [selectedStories, setSelectedStories] = useState([]);
 
   useEffect(() => {
     if (query.length >= 3) {
@@ -28,6 +29,12 @@ export default function Home() {
       setIsDropdownVisible(false);
     }
   }, [query]);
+
+  const handleSelectStory = (story) => {
+    setSelectedStories((prevStories) => [...prevStories, story]);
+    setQuery("");
+    setIsDropdownVisible(false);
+  };
 
   return (
     <>
@@ -50,7 +57,7 @@ export default function Home() {
             {isDropdownVisible && suggestions.length > 0 && (
               <ul>
                 {suggestions.map((suggestion, index) => (
-                  <li key={index}>
+                  <li key={index} onClick={() => handleSelectStory(suggestion)}>
                     <h4>{suggestion.title}</h4>
                     <p>
                       <span>{suggestion.points} points </span> |{" "}
@@ -62,6 +69,24 @@ export default function Home() {
               </ul>
             )}
           </div>
+
+          {selectedStories.length > 0 && (
+            <div>
+              <h3>Saved Stories</h3>
+              <ul>
+                {selectedStories.map((story, index) => (
+                  <li key={index}>
+                    <h4>{story.title}</h4>
+                    <p>
+                      <span> {story.points} Points</span> |{" "}
+                      <span>{story.author} </span> |{" "}
+                      <span> {story.num_comments} comments</span>
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </main>
         <footer className={styles.footer}>
           Created By Eleftheria Drakoulakou
