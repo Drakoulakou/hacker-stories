@@ -3,18 +3,14 @@ const StoryItem = ({
   points,
   author,
   comments,
-  deleteButton,
   deleteHandler,
-  index,
-  showDeleteButton,
   suggestionHandler,
   suggestionItem,
 }) => {
   return (
     <div className="selected-stories">
       <li
-        key={index}
-        onClick={suggestionItem && suggestionHandler}
+        onClick={suggestionHandler}
         className={`${suggestionItem ? "suggestion-item" : ""}`}
       >
         <div>
@@ -24,7 +20,7 @@ const StoryItem = ({
             <span> {comments} comments</span>
           </p>
         </div>
-        {showDeleteButton && (
+        {!!deleteHandler && (
           <p className="delete-button" onClick={deleteHandler}>
             Delete
           </p>

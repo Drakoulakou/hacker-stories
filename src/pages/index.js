@@ -4,6 +4,7 @@ import Image from "next/image";
 import localFont from "next/font/local";
 import styles from "@/styles/Home.module.css";
 import StoryItem from "@/components/StoryItem";
+import Confetti from "react-confetti";
 
 export default function Home() {
   const [query, setQuery] = useState("");
@@ -31,6 +32,7 @@ export default function Home() {
             author: item.author,
             num_comments: item.num_comments,
             points: item.points,
+            id: item.objectID,
           }));
           setSuggestions(results);
           setIsDropdownVisible(true);
@@ -61,7 +63,7 @@ export default function Home() {
       <>
         {parts.map((part, index) =>
           part.toLowerCase() === query.toLowerCase() ? (
-            <span key={index} style={{ color: "orange" }}>
+            <span key={index} style={{ color: "#dd455f" }}>
               {part}
             </span>
           ) : (
@@ -83,6 +85,7 @@ export default function Home() {
       <div className={`${styles.page}`}>
         <main className={styles.main}>
           <h1>Hacker Stories</h1>
+          <Confetti width={1500} height={1000} gravity={0.01} />
           <div className="auto-suggest-container">
             <input
               type="text"
@@ -95,12 +98,11 @@ export default function Home() {
               <ul className="suggestions-dropdown">
                 {suggestions.map((suggestion, index) => (
                   <StoryItem
-                    key={index + 1}
+                    key={suggestion.id}
                     title={highlightMatch(suggestion.title, debouncedQuery)}
                     points={suggestion.points}
                     author={suggestion.author}
                     comments={suggestion.num_comments}
-                    index={index}
                     suggestionHandler={() => handleSelectStory(suggestion)}
                     suggestionItem
                   />
@@ -112,14 +114,12 @@ export default function Home() {
               <ul>
                 {selectedStories.map((story, index) => (
                   <StoryItem
-                    key={story.title}
+                    key={story.id}
                     title={story.title}
                     points={story.points}
                     author={story.author}
                     comments={story.num_comments}
                     deleteHandler={() => handleDeleteStory(index)}
-                    index={index}
-                    showDeleteButton
                   />
                 ))}
               </ul>
